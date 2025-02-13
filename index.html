@@ -1,69 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Game</title>
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4a90e2',
+                        secondary: '#2c3e50',
+                        success: '#2ecc71',
+                        error: '#e74c3c',
+                        background: '#f5f6fa',
+                        text: '#2c3e50',
+                        highlight: '#f0f0f0',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    </style>
 </head>
-<body>
-    <div class="game-container">
-        <div class="game-header">
-            <h1 class="game-title">Typing Game</h1>
-            <div id="user-info" class="user-info">
-                <label for="username">Enter Your Name: </label>
-                <input type="text" id="username" placeholder="Your Name" class="input-field">
+<body class="bg-gradient-to-br from-primary to-secondary min-h-screen flex justify-center items-center p-5 font-poppins transition-colors duration-300 dark:from-gray-800 dark:to-gray-900">
+    <div class="game-container bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl w-full max-w-3xl transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
+        <div class="game-header text-center mb-8">
+            <h1 class="game-title text-4xl font-bold text-primary dark:text-primary mb-6 animate-pulse">Typing Game</h1>
+            <div id="user-info" class="user-info mb-4">
+                <label for="username" class="text-secondary dark:text-gray-300">Enter Your Name: </label>
+                <input type="text" id="username" placeholder="Your Name" class="input-field mt-2 p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
             </div>
 
-            <div id="mode-selection">
-                <label for="mode">Choose Mode: </label>
-                <select id="mode">
+            <div id="mode-selection" class="mb-4">
+                <label for="mode" class="text-secondary dark:text-gray-300">Choose Mode: </label>
+                <select id="mode" class="mt-2 p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
                     <option value="word">Word Mode</option>
                     <option value="sentence">Sentence Mode</option>
                 </select>
             </div>
             
-            <div class="stats-container">
-                <div class="stat-box">
-                    <p>Time Left: <span id="timer">60</span>s</p>
+            <div class="stats-container grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="stat-box bg-highlight dark:bg-gray-700 p-4 rounded-lg transition-transform duration-300 hover:-translate-y-1">
+                    <p class="text-secondary dark:text-gray-300"><i class="fas fa-clock mr-2"></i>Time Left: <span id="timer" class="font-bold">60</span>s</p>
                 </div>
-                <div class="stat-box">
-                    <p>Score: <span id="score">0</span></p>
+                <div class="stat-box bg-highlight dark:bg-gray-700 p-4 rounded-lg transition-transform duration-300 hover:-translate-y-1">
+                    <p class="text-secondary dark:text-gray-300"><i class="fas fa-star mr-2"></i>Score: <span id="score" class="font-bold">0</span></p>
                 </div>
-                <div class="stat-box">
-                    <p>Words: <span id="word-count">0</span></p>
+                <div class="stat-box bg-highlight dark:bg-gray-700 p-4 rounded-lg transition-transform duration-300 hover:-translate-y-1">
+                    <p class="text-secondary dark:text-gray-300"><i class="fas fa-font mr-2"></i>Words: <span id="word-count" class="font-bold">0</span></p>
                 </div>
-                <div class="stat-box">
-                    <p>WPM: <span id="wpm">0</span></p>
+                <div class="stat-box bg-highlight dark:bg-gray-700 p-4 rounded-lg transition-transform duration-300 hover:-translate-y-1">
+                    <p class="text-secondary dark:text-gray-300"><i class="fas fa-tachometer-alt mr-2"></i>WPM: <span id="wpm" class="font-bold">0</span></p>
                 </div>
-                <div class="stat-box">
-                    <p>Accuracy: <span id="accuracy">100%</span></p>
+                <div class="stat-box bg-highlight dark:bg-gray-700 p-4 rounded-lg transition-transform duration-300 hover:-translate-y-1">
+                    <p class="text-secondary dark:text-gray-300"><i class="fas fa-bullseye mr-2"></i>Accuracy: <span id="accuracy" class="font-bold">100%</span></p>
                 </div>
             </div>
         </div>
 
-        <div class="game-area">
-            <div id="word-display" class="word-display">Press Start to Begin!</div>
-            <input type="text" id="word-input" placeholder="Type the word..." autocomplete="off" disabled class="input-field">
-            <div id="feedback" class="feedback"></div>
+        <div class="game-area my-8">
+            <div id="word-display" class="word-display text-xl font-bold text-center mx-auto p-5 bg-highlight dark:bg-gray-700 rounded-lg w-3/5 h-20 flex justify-center items-center shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 dark:text-white">Press Start to Begin!</div>
+            <input type="text" id="word-input" placeholder="Type the word..." autocomplete="off" disabled class="input-field w-3/5 mx-auto block mt-4 p-4 text-lg border-2 border-highlight dark:border-gray-600 rounded-lg transition-all duration-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white">
+            <div id="feedback" class="feedback text-center mt-4 text-success dark:text-green-400"></div>
         </div>
 
-        <div class="game-controls">
-            <button id="start-btn" class="btn btn-start">Start</button>
-            <button id="pause-btn" class="btn btn-pause" disabled>Pause</button>
+        <div class="game-controls flex gap-4 justify-center my-8">
+            <button id="start-btn" class="btn btn-start bg-success text-white py-3 px-6 rounded-lg uppercase font-semibold tracking-wide transition-all duration-300 hover:bg-green-600 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"><i class="fas fa-play mr-2"></i>Start</button>
+            <button id="pause-btn" class="btn btn-pause bg-primary text-white py-3 px-6 rounded-lg uppercase font-semibold tracking-wide transition-all duration-300 hover:bg-blue-600 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" disabled><i class="fas fa-pause mr-2"></i>Pause</button>
         </div>
 
-        <div class="high-scores">
-            <h3>High Scores</h3>
-            <ul id="high-scores" class="high-score-list"></ul>
+        <div class="high-scores mt-8 p-4 bg-highlight dark:bg-gray-700 rounded-lg">
+            <h3 class="text-primary dark:text-primary text-center text-xl font-semibold mb-4"><i class="fas fa-trophy mr-2"></i>High Scores</h3>
+            <ul id="high-scores" class="high-score-list space-y-2"></ul>
         </div>
 
-        <div class="achievements">
-            <h3>Achievements</h3>
-            <div class="achievement-list" id="achievements"></div>
+        <div class="achievements mt-8 pt-8 border-t-2 border-gray-200 dark:border-gray-600">
+            <h3 class="text-center text-secondary dark:text-gray-300 text-xl font-semibold mb-4"><i class="fas fa-medal mr-2"></i>Achievements</h3>
+            <div class="achievement-list grid grid-cols-2 md:grid-cols-3 gap-4" id="achievements"></div>
         </div>
     </div>
 
+    <button id="theme-toggle" class="fixed top-4 right-4 bg-white dark:bg-gray-800 text-gray-800 dark:text-white p-2 rounded-full shadow-md transition-colors duration-300">
+        <i class="fas fa-sun text-xl dark:hidden"></i>
+        <i class="fas fa-moon text-xl hidden dark:inline"></i>
+    </button>
+
     <script src="script.js"></script>
+    <script>
+        
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+        });
+    </script>
 </body>
 </html>

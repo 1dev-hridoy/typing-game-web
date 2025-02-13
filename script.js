@@ -6,29 +6,42 @@ let timeLeft = 60;  // Default time for Word Mode
 let score = 0;
 let wordCount = 0;
 let isGameRunning = false;
+let totalCharacters = 0;
+let mistakes = 0;
+let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+let currentWordStart = 0;
+let keySound = new Audio('data:audio/wav;base64,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qJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=');
 
+// Initialize game state
 function startGame() {
-    // Get selected mode
-    let mode = document.getElementById('mode').value;
+    // Get selected mode and difficulty with fallbacks
+    let mode = document.getElementById('mode')?.value || 'word';
+    let difficulty = document.getElementById('difficulty')?.value || 'medium';
     
     // Set the timer based on selected mode
-    if (mode === 'sentence') {
-        timeLeft = 120;  // 2 minutes for Sentence Mode
-    } else {
-        timeLeft = 60;  // 1 minute for Word Mode
-    }
+    timeLeft = mode === 'sentence' ? 120 : 60;  // 2 minutes for Sentence Mode, 1 minute for Word Mode
 
+    // Reset stats
+    score = 0;
+    wordCount = 0;
+    totalCharacters = 0;
+    mistakes = 0;
+    currentWordStart = Date.now();
+    
+    // Update UI
     document.getElementById('timer').textContent = timeLeft;
-    document.getElementById('word-input').disabled = false;  // Enable typing input
-    document.getElementById('start-btn').disabled = true;  // Disable start button after game starts
-    document.getElementById('pause-btn').disabled = false; // Enable pause button
+    document.getElementById('score').textContent = '0';
+    document.getElementById('word-count').textContent = '0';
+    document.getElementById('wpm').textContent = '0';
+    document.getElementById('accuracy').textContent = '100%';
+    
+    document.getElementById('word-input').disabled = false;
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('pause-btn').disabled = false;
+    document.getElementById('word-input').focus();
 
     isGameRunning = true;
-
-    // Start countdown timer
     timer = setInterval(updateTimer, 1000);
-
-    // Display a word to type
     showWord();
 }
 
@@ -36,12 +49,99 @@ function updateTimer() {
     if (timeLeft > 0) {
         timeLeft--;
         document.getElementById('timer').textContent = timeLeft;
+        
+        // Calculate and update WPM
+        let elapsedMinutes = (60 - timeLeft) / 60;
+        if (elapsedMinutes > 0) {
+            let wpm = Math.round((totalCharacters / 5) / elapsedMinutes);
+            document.getElementById('wpm').textContent = wpm;
+        }
     } else {
-        clearInterval(timer);
-        isGameRunning = false;
-        alert('Game Over! Time is up!');
-        document.getElementById('word-input').disabled = true;  // Disable typing input
+        endGame();
     }
+}
+
+function endGame() {
+    clearInterval(timer);
+    isGameRunning = false;
+    document.getElementById('word-input').disabled = true;
+    
+    // Calculate final stats
+    let elapsedMinutes = 1;  // 1 minute for word mode, 2 for sentence mode
+    if (document.getElementById('mode').value === 'sentence') elapsedMinutes = 2;
+    
+    let finalWpm = Math.round((totalCharacters / 5) / elapsedMinutes);
+    let accuracy = Math.round(((totalCharacters - mistakes) / totalCharacters) * 100) || 100;
+    
+    // Update high scores
+    let playerName = document.getElementById('username').value || 'Anonymous';
+    highScores.push({
+        name: playerName,
+        score: score,
+        wpm: finalWpm,
+        accuracy: accuracy,
+        date: new Date().toLocaleDateString()
+    });
+    
+    // Sort and keep top 10
+    highScores.sort((a, b) => b.score - a.score);
+    highScores = highScores.slice(0, 10);
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+    
+    // Show game over message with stats
+    alert(`Game Over!\n\nFinal Score: ${score}\nWPM: ${finalWpm}\nAccuracy: ${accuracy}%`);
+    updateHighScoreDisplay();
+}
+
+function checkInput() {
+    let input = document.getElementById('word-input');
+    let typedText = input.value;
+    let word = document.getElementById('word-display').textContent;
+    
+    // Real-time feedback
+    if (typedText === word.substring(0, typedText.length)) {
+        input.style.backgroundColor = '#e8f5e9';  // Light green for correct
+    } else {
+        input.style.backgroundColor = '#ffebee';  // Light red for incorrect
+        mistakes++;
+    }
+    
+    if (typedText === word) {
+        // Play sound
+        keySound.play();
+        
+        // Update stats
+        score++;
+        wordCount++;
+        totalCharacters += word.length;
+        
+        // Calculate word completion time
+        let wordTime = (Date.now() - currentWordStart) / 1000;  // in seconds
+        let wordWpm = Math.round((word.length / 5) / (wordTime / 60));
+        
+        // Update display
+        document.getElementById('score').textContent = score;
+        document.getElementById('word-count').textContent = wordCount;
+        document.getElementById('accuracy').textContent = 
+            Math.round(((totalCharacters - mistakes) / totalCharacters) * 100) + '%';
+        
+        // Clear input and show next word
+        input.value = '';
+        input.style.backgroundColor = 'white';
+        currentWordStart = Date.now();
+        showWord();
+    }
+}
+
+function updateHighScoreDisplay() {
+    const highScoreList = document.getElementById('high-scores');
+    highScoreList.innerHTML = '';
+    
+    highScores.forEach((score, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${score.name}: ${score.score} points (${score.wpm} WPM, ${score.accuracy}% accuracy)`;
+        highScoreList.appendChild(li);
+    });
 }
 
 function showWord() {
@@ -49,32 +149,6 @@ function showWord() {
     document.getElementById('word-display').textContent = word;
 
     document.getElementById('word-input').addEventListener('input', checkInput);
-}
-
-function checkInput() {
-    let typedText = document.getElementById('word-input').value;
-    let word = document.getElementById('word-display').textContent;
-
-    if (typedText === word) {
-        score++;
-        wordCount++;
-        document.getElementById('score').textContent = score;
-        document.getElementById('word-count').textContent = wordCount;
-        document.getElementById('word-input').value = ''; // Clear input
-        showWord(); // Show the next word
-    }
-}
-
-function pauseGame() {
-    if (isGameRunning) {
-        clearInterval(timer);
-        isGameRunning = false;
-        document.getElementById('pause-btn').textContent = 'Resume';
-    } else {
-        timer = setInterval(updateTimer, 1000);
-        isGameRunning = true;
-        document.getElementById('pause-btn').textContent = 'Pause';
-    }
 }
 
 function generateWord() {
@@ -189,12 +263,12 @@ function generateWord() {
     "Don't bite the hand that feeds you.",
     "Look before you leap.",
     "All is fair in love and war.",
-    "You can’t judge a book by its cover.",
+    "You can't judge a book by its cover.",
     "A friend in need is a friend indeed.",
     "Many hands make light work.",
     "A house divided against itself cannot stand.",
     "A little knowledge is a dangerous thing.",
-    "There’s no place like home.",
+    "There's no place like home.",
     "If the shoe fits, wear it.",
     "Familiarity breeds contempt.",
     "If you want something done right, do it yourself.",
@@ -205,12 +279,12 @@ function generateWord() {
     "Where there's a will, there's a way.",
     "Slow and steady wins the race.",
     "Look before you leap.",
-    "You can’t have it both ways.",
-    "Don’t take it for granted.",
+    "You can't have it both ways.",
+    "Don't take it for granted.",
     "Make hay while the sun shines.",
     "If it sounds too good to be true, it probably is.",
     "Knowledge is power.",
-    "You can’t always get what you want.",
+    "You can't always get what you want.",
     "The road to hell is paved with good intentions.",
     "The early bird catches the worm.",
     "If you can't stand the heat, get out of the kitchen.",
@@ -228,8 +302,8 @@ function generateWord() {
     "Let sleeping dogs lie.",
     "The best revenge is massive success.",
     "What doesn't kill you makes you stronger.",
-    "You can’t always get what you want.",
-    "Don’t throw the baby out with the bathwater.",
+    "You can't always get what you want.",
+    "Don't throw the baby out with the bathwater.",
     "What doesn't kill you makes you stronger.",
     "The best is yet to come.",
     "Happiness is a choice.",
@@ -242,5 +316,17 @@ function generateWord() {
         return sentences[Math.floor(Math.random() * sentences.length)];
     } else {
         return words[Math.floor(Math.random() * words.length)];
+    }
+}
+
+function pauseGame() {
+    if (isGameRunning) {
+        clearInterval(timer);
+        isGameRunning = false;
+        document.getElementById('pause-btn').textContent = 'Resume';
+    } else {
+        timer = setInterval(updateTimer, 1000);
+        isGameRunning = true;
+        document.getElementById('pause-btn').textContent = 'Pause';
     }
 }

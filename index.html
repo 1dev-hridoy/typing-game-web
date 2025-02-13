@@ -31,7 +31,13 @@
                     <p>Score: <span id="score">0</span></p>
                 </div>
                 <div class="stat-box">
-                    <p>Words Typed: <span id="word-count">0</span></p> <!-- Added word count -->
+                    <p>Words: <span id="word-count">0</span></p>
+                </div>
+                <div class="stat-box">
+                    <p>WPM: <span id="wpm">0</span></p>
+                </div>
+                <div class="stat-box">
+                    <p>Accuracy: <span id="accuracy">100%</span></p>
                 </div>
             </div>
         </div>
@@ -45,7 +51,11 @@
         <div class="game-controls">
             <button id="start-btn" class="btn btn-start">Start</button>
             <button id="pause-btn" class="btn btn-pause" disabled>Pause</button>
-            <!-- <button id="restart-btn" class="btn btn-restart" disabled>Restart</button> -->
+        </div>
+
+        <div class="high-scores">
+            <h3>High Scores</h3>
+            <ul id="high-scores" class="high-score-list"></ul>
         </div>
 
         <div class="achievements">
